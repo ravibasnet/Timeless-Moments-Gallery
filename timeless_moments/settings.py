@@ -17,8 +17,9 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-# TEMPORARY: Allow all hosts for debugging on Render
-ALLOWED_HOSTS = ['*']
+# For production security, only allow your Render domain
+ALLOWED_HOSTS = ['timeless-moment-gallery-lose.onrender.com']
+# IMPORTANT: Remove any ALLOWED_HOSTS environment variable in Render dashboard to avoid override.
 
 # Application definition
 INSTALLED_APPS = [
