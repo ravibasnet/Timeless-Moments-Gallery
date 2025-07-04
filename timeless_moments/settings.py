@@ -19,6 +19,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 # For production security, only allow your Render domain
 ALLOWED_HOSTS = ['*']
+print('ALLOWED_HOSTS at runtime:', ALLOWED_HOSTS)
 # IMPORTANT: Remove any ALLOWED_HOSTS environment variable in Render dashboard to avoid override.
 
 # Application definition
