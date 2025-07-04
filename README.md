@@ -31,7 +31,7 @@
 3. Set environment variables in the Render dashboard:
    - `SECRET_KEY`
    - `DEBUG=False`
-   - `ALLOWED_HOSTS=your-app.onrender.com`
+   - `ALLOWED_HOSTS=     timeless-moment-gallery-lose.onrender.com,127.0.0.1,localhost`
    - `SECURE_SSL_REDIRECT=True`
    - (Render will set `DATABASE_URL` for you if using PostgreSQL)
 4. Set build and start commands:
