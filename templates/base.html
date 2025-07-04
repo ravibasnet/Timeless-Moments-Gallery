@@ -1,0 +1,720 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Timeless Moments{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a'
+                        },
+                        secondary: '#d97706',
+                        accent: '#f59e0b'
+                    },
+                    transitionProperty: {
+                        'height': 'height',
+                        'spacing': 'margin, padding',
+                        'transform': 'transform'
+                    },
+                    transitionDuration: {
+                        '200': '200ms',
+                        '400': '400ms',
+                        '600': '600ms',
+                    },
+                    transitionTimingFunction: {
+                        'bounce-in-out': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+                        'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.3.3/photoswipe.min.css">
+    <style>
+        /* Popup Styles */
+        #booking-form-popup {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            display: none;
+        }
+        
+        #booking-form-popup.flex {
+            display: flex;
+            opacity: 1;
+        }
+        
+        #booking-form-popup.hidden {
+            display: none !important;
+            opacity: 0;
+        }
+        
+        .popup-open {
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            /* Premium Photography Color Palette */
+            --primary: #0F172A;  /* Deep Navy */
+            --primary-light: #1E293B;
+            --secondary: #D4AF37;  /* Gold */
+            --accent: #D4A5A5;  /* Dusty Rose */
+            --neutral: #6B7AA1;  /* Slate Blue */
+            --light: #F8F4E9;  /* Cream */
+            --dark: #333333;  /* Charcoal */
+            --header-overlay: 0;
+            
+            /* Gradients */
+            --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #D4A5A5 100%);
+            --gradient-navy: linear-gradient(135deg, #0F172A 0%, #6B7AA1 100%);
+        }
+
+
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        
+        /* Modern Footer */
+        .footer {
+            background: var(--primary);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--light);
+            padding: 2rem 0;
+            margin-top: auto; /* Pushes footer to bottom when content is short */
+        }
+        
+        /* Ensure body and html take full height and remove default margins */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        main {
+            flex: 1 0 auto;
+            padding-bottom: 2rem;
+            padding-top: 60px; /* Exact padding to match header height */
+        }
+        
+        /* Header Styles */
+        #main-header {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 60px; /* Fixed height */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transform: translateY(0);
+        }
+        
+        #main-header.scrolled {
+            background-color: rgba(15, 23, 42, 0.95); /* Less transparent */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        #logo-link {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+        }
+        
+        #logo-link:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+        
+        #main-header.scrolled #logo-link {
+            transform: scale(0.95);
+        }
+        
+        .hero-section {
+            padding-top: 2rem;
+        }
+        
+        /* Navigation link hover effect */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--secondary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .nav-link.text-secondary::after {
+            width: 100%;
+        }
+        
+        .footer h5 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer h5::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 50px;
+            height: 3px;
+            background: var(--gradient-gold);
+            border-radius: 3px;
+        }
+        
+        .footer-links a {
+            display: block;
+            padding: 8px 0;
+            color: rgba(248, 244, 233, 0.8);
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
+            transform: translateX(5px);
+        }
+        
+        .footer-contact li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            color: var(--secondary);
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        /* Scroll to Top Button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-to-top:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+
+        @media (max-width: 768px) {
+            .footer {
+                text-align: center;
+            }
+            .footer-links, .footer-contact, .social-links {
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-white m-0 p-0">
+    <!-- Preloader -->
+    <div id="preloader" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background-color: var(--primary); display: flex; justify-content: center; align-items: center;">
+        <div class="spinner">
+            <i class="ri-camera-lens-line text-4xl text-secondary animate-spin"></i>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="fixed w-full z-50 transition-all duration-300 py-2 top-0 bg-primary-900 bg-opacity-90 backdrop-blur-lg shadow-md border-b border-white/10" id="main-header">
+        <nav class="w-full h-14">
+            <div class="container mx-auto px-4 py-2">
+                <div class="flex justify-between items-center">
+                    <!-- Logo -->
+                    <a href="{% url 'studio_main:home' %}" class="flex items-center" id="logo-link">
+                        <div class="bg-white p-1.5 rounded-md mr-2">
+                            <i class="ri-camera-lens-fill text-primary-900 text-xl"></i>
+                        </div>
+                        <span class="text-white font-bold text-lg tracking-tight">TIMELESS <span class="text-secondary font-normal">moments</span></span>
+                    </a>
+                    
+                    <!-- Desktop Menu -->
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="{% url 'studio_main:home' %}" class="text-white hover:text-secondary transition-all duration-300 text-sm font-medium relative nav-link">Home</a>
+                        <a href="{% url 'studio_services:service_list' %}" class="text-white hover:text-secondary transition-all duration-300 text-sm font-medium relative nav-link">Services</a>
+                        <a href="{% url 'studio_portfolio:portfolio_list' %}" class="text-white hover:text-secondary transition-all duration-300 text-sm font-medium relative nav-link">Portfolio</a>
+                        <a href="{% url 'studio_main:contact' %}" class="text-white hover:text-secondary transition-all duration-300 text-sm font-medium relative nav-link">Contact</a>
+                        <li class="nav-item ms-lg-3 flex items-center">
+                            <a href="{% url 'studio_booking:booking_spa' %}" class="bg-secondary hover:bg-secondary-600 text-white font-medium py-1.5 px-4 rounded-full transition-all duration-300 text-xs shadow-md hover:shadow-lg hover:transform hover:scale-105" onclick="event.stopPropagation()">
+                                Book Now
+                            </a>
+                        </li>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-button" class="text-white focus:outline-none p-1.5 rounded-full hover:bg-white/10 transition-all duration-300 md:hidden" aria-expanded="false" aria-controls="mobile-menu">
+                        <i class="ri-menu-line text-xl transition-transform duration-300"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden bg-primary-800 bg-opacity-95 backdrop-blur-lg border-t border-primary-700 md:hidden transform transition-all duration-300 ease-in-out">
+                <div class="container mx-auto px-4 py-3 space-y-3">
+                    <a href="{% url 'studio_main:home' %}" class="block text-white hover:text-secondary transition-all duration-300 py-2 text-sm font-medium border-l-2 border-transparent hover:border-secondary pl-2">Home</a>
+                    <a href="{% url 'studio_services:service_list' %}" class="block text-white hover:text-secondary transition-all duration-300 py-2 text-sm font-medium border-l-2 border-transparent hover:border-secondary pl-2">Services</a>
+                    <a href="{% url 'studio_portfolio:portfolio_list' %}" class="block text-white hover:text-secondary transition-all duration-300 py-2 text-sm font-medium border-l-2 border-transparent hover:border-secondary pl-2">Portfolio</a>
+                    <a href="{% url 'studio_booking:booking_spa' %}" class="block bg-secondary hover:bg-secondary-600 text-white font-semibold py-2.5 px-5 rounded-full transition-all duration-300 text-sm text-center my-3 shadow-md hover:shadow-lg hover:transform hover:scale-105" onclick="event.stopPropagation()">
+                        Book Now
+                    </a>
+                    <a href="{% url 'studio_main:contact' %}" class="block text-white hover:text-secondary transition-all duration-300 py-2 text-sm font-medium border-l-2 border-transparent hover:border-secondary pl-2">Contact</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container" style="margin-top: 4rem;">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-glass fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+        <div>
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- Call to Action Section -->
+    <div class="bg-primary-900 text-white py-12">
+        <div class="container">
+            <div class="text-center mb-8" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Capture Your Special Moments?</h2>
+                <p class="text-lg text-primary-200 max-w-2xl mx-auto">Let us help you tell your story through beautiful photography</p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-center gap-6" data-aos="fade-up" data-aos-delay="100">
+                <a href="{% url 'studio_services:service_list' %}" class="bg-secondary hover:bg-secondary-600 text-white font-semibold py-3 px-8 rounded-full transition duration-300 text-center">
+                    Explore Our Services
+                </a>
+                <a href="{% url 'studio_main:contact' %}" class="border-2 border-secondary text-secondary hover:bg-secondary hover:text-white font-semibold py-3 px-8 rounded-full transition duration-300 text-center">
+                    Get In Touch
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer bg-primary-800 text-white">
+        <div class="container py-4">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h5><i class="ri-camera-lens-fill me-2"></i>Timeless Moments</h5>
+                    <p>Capturing your precious moments with creativity and precision.</p>
+                    <div class="social-links">
+                        <a href="#" class="me-3"><i class="ri-instagram-line"></i></a>
+                        <a href="#" class="me-3"><i class="ri-facebook-circle-line"></i></a>
+                        <a href="#" class="me-3"><i class="ri-twitter-line"></i></a>
+                        <a href="#"><i class="ri-pinterest-line"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="{% url 'studio_main:home' %}" class="footer-link">Home</a></li>
+                        <li><a href="{% url 'studio_services:service_list' %}" class="footer-link">Services</a></li>
+                        <li><a href="{% url 'studio_portfolio:portfolio_list' %}" class="footer-link">Portfolio</a></li>
+                        <li><a href="{% url 'studio_booking:booking_spa' %}" class="footer-link" onclick="event.stopPropagation()">Book Now</a></li>
+                        <li><a href="{% url 'studio_main:contact' %}" class="footer-link">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <ul class="list-unstyled footer-contact">
+                        <li><i class="ri-mail-line me-2"></i>timelessmomentsgallery@gmail.com</li>
+                        <li><i class="ri-phone-line me-2"></i>+977 9763419089</li>
+                        <li><i class="ri-map-pin-line me-2"></i>Bode - 8, Madhyapur Thimi, Bhaktapur, Nepal</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-4">
+            <div class="text-center">
+                <p class="mb-0">&copy; {% now "Y" %} Timeless Moments. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">
+        <i class="ri-arrow-up-line"></i>
+    </button>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.3.3/photoswipe.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.3.3/photoswipe-lightbox.min.js"></script>
+    <script>
+        // Initialize any global booking variables
+        window.bookingConfig = {
+            csrfToken: '{{ csrf_token }}',
+            bookingUrl: '{% url "studio_booking:api_book_session" %}',
+            minDate: new Date().toISOString().split('T')[0], // Today's date in YYYY-MM-DD
+            namespace: 'studio_booking:'
+        };
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize AOS
+            AOS.init({
+                duration: 800,
+                once: true
+            });
+
+            // Scroll to top button
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    scrollToTopBtn.classList.add('show');
+                } else {
+                    scrollToTopBtn.classList.remove('show');
+                }
+            });
+            
+            scrollToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Mobile menu toggle with animation
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                // Add initial styles for animation
+                mobileMenu.style.maxHeight = '0';
+                mobileMenu.style.overflow = 'hidden';
+                
+                mobileMenuButton.addEventListener('click', function() {
+                    const isHidden = mobileMenu.classList.contains('hidden');
+                    
+                    // Toggle visibility
+                    if (isHidden) {
+                        mobileMenu.classList.remove('hidden');
+                        // Trigger animation after removing hidden class
+                        setTimeout(() => {
+                            mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+                        }, 10);
+                    } else {
+                        mobileMenu.style.maxHeight = '0';
+                        // Hide after animation completes
+                        setTimeout(() => {
+                            mobileMenu.classList.add('hidden');
+                        }, 300); // Match transition duration
+                    }
+                    
+                    // Toggle icon with rotation
+                    const icon = mobileMenuButton.querySelector('i');
+                    if (icon.classList.contains('ri-menu-line')) {
+                        icon.classList.remove('ri-menu-line');
+                        icon.classList.add('ri-close-line');
+                        icon.style.transform = 'rotate(90deg)';
+                    } else {
+                        icon.classList.remove('ri-close-line');
+                        icon.classList.add('ri-menu-line');
+                        icon.style.transform = 'rotate(0)';
+                    }
+                });
+            }
+            
+            // Header scroll effect
+            const header = document.getElementById('main-header');
+            
+            if (header) {
+                let lastScrollTop = 0;
+                
+                const handleScroll = function() {
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    
+                    // Add shadow and background when scrolled
+                    if (scrollTop > 0) {
+                        header.classList.add('shadow-md', 'scrolled');
+                    } else {
+                        header.classList.remove('shadow-md', 'scrolled');
+                    }
+                    
+                    // Hide header when scrolling down, show when scrolling up
+                    if (scrollTop > lastScrollTop && scrollTop > 60) {
+                        // Scrolling down & past header height
+                        header.style.transform = 'translateY(-100%)';
+                    } else {
+                        // Scrolling up or at top
+                        header.style.transform = 'translateY(0)';
+                    }
+                    
+                    lastScrollTop = scrollTop;
+                };
+                
+                window.addEventListener('scroll', handleScroll);
+                
+                // Trigger scroll event on page load to set initial state
+                handleScroll();
+                
+                // Force header to be visible immediately
+                header.style.opacity = '1';
+            }
+            
+            // Add active class to current nav item
+            const currentLocation = window.location.pathname;
+            const navLinks = document.querySelectorAll('header nav a');
+            const mobileNavLinks = document.querySelectorAll('#mobile-menu a');
+            
+            function setActiveLink(links) {
+                links.forEach(link => {
+                    if (link.getAttribute('href') === currentLocation ||
+                        currentLocation.includes(link.getAttribute('href')) && link.getAttribute('href') !== '/') {
+                        link.classList.add('text-secondary');
+                    }
+                });
+            }
+            
+            setActiveLink(navLinks);
+            setActiveLink(mobileNavLinks);
+        });
+
+        // Preloader
+        window.addEventListener('load', function() {
+            document.getElementById('preloader').style.display = 'none';
+            // Hide any other spinners that might be left
+            document.querySelectorAll('.spinner, .loading-spinner').forEach(function(el) {
+                el.style.display = 'none';
+            });
+        });
+    </script>
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        // Initialize all Swiper sliders
+        document.addEventListener('DOMContentLoaded', function() {
+            const testimonialSliders = document.querySelectorAll('.testimonial-slider');
+            
+            testimonialSliders.forEach(slider => {
+                new Swiper(slider, {
+                    slidesPerView: 1,
+                    spaceBetween: 32,
+                    loop: true,
+                    autoplay: {
+                        delay: 5000,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: slider.querySelector('.swiper-pagination'),
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: slider.querySelector('.swiper-button-next'),
+                        prevEl: slider.querySelector('.swiper-button-prev'),
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 2,
+                        },
+                        1024: {
+                            slidesPerView: 3,
+                            spaceBetween: 40,
+                        },
+                    },
+                });
+            });
+        });
+    </script>
+    
+    <!-- Booking Popup -->
+    <div id="booking-form-popup" class="fixed inset-0 z-[9999]" style="display: none;">
+        <!-- Overlay -->
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" id="booking-overlay"></div>
+        
+        <!-- Popup Content -->
+        <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-2xl z-[10000] p-6" id="popup-content">
+            <!-- Close Button -->
+            <button id="close-booking-popup" class="absolute top-4 right-4 z-20 text-gray-500 hover:text-gray-700 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <div class="sticky top-0 bg-white z-10 px-6 pt-6 pb-2 border-b">
+                <h3 class="text-2xl font-bold text-gray-900">Book Your Session</h3>
+            </div>
+            
+            <form id="booking-form" class="space-y-4">
+                <!-- Selected Dates Display -->
+                <div id="selected-date-container" class="hidden bg-gray-50 p-4 rounded-lg">
+                    <div id="selected-date-display" class="space-y-2">
+                        <!-- Selected dates will be inserted here by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Name -->
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <input type="text" id="name" name="name" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                </div>
+                
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="email" name="email" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                </div>
+                
+                <!-- Phone -->
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                    <input type="tel" id="phone" name="phone"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                </div>
+                
+                <!-- Time Picker -->
+                <div>
+                    <label for="start_time" class="block text-sm font-medium text-gray-700 mb-1">Preferred Time</label>
+                    <input type="time" id="start_time" name="start_time" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                </div>
+                
+                <!-- Notes -->
+                <div>
+                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
+                    <textarea id="notes" name="notes" rows="3"
+                             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary"></textarea>
+                </div>
+                
+                <!-- Submit Button -->
+                <div class="pt-2">
+                    <button type="submit" 
+                            class="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50">
+                        Confirm Booking
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-10 opacity-0 transition-all duration-300 z-50">
+        <div class="flex items-center space-x-2">
+            <span id="toast-message"></span>
+            <button id="close-toast" class="text-gray-300 hover:text-white">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize any global booking variables
+        window.bookingConfig = {
+            csrfToken: '{{ csrf_token }}',
+            bookingUrl: '{% url "studio_booking:api_book_session" %}',
+            minDate: new Date().toISOString().split('T')[0], // Today's date in YYYY-MM-DD
+            namespace: 'studio_booking:'
+        };
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

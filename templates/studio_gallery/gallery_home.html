@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold mb-3">Photo Gallery</h1>
+            <p class="lead text-muted">Browse our complete collection</p>
+        </div>
+        
+        <!-- Category Filter -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-wrap gap-2 justify-content-center">
+                    <a href="?" class="btn btn-{% if not selected_category %}primary{% else %}outline-secondary{% endif %} rounded-pill">
+                        All Photos
+                    </a>
+                    {% for category in categories %}
+                    <a href="?category={{ category.slug }}" 
+                       class="btn btn-{% if selected_category == category.slug %}primary{% else %}outline-secondary{% endif %} rounded-pill">
+                        {{ category.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Photo Grid -->
+        <div class="row g-4" data-masonry='{"percentPosition": true}'>
+            {% if photos %}
+                {% for photo in photos %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <a href="#" class="gallery-item" data-index="{{ forloop.counter0 }}">
+                            <img src="{{ photo.image.url }}" 
+                                 class="card-img-top img-fluid hover-zoom" 
+                                 alt="{{ photo.title }}"
+                                 style="height: 300px; object-fit: cover;">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ photo.title }}</h5>
+                            <p class="card-text text-muted">{{ photo.category.name }}</p>
+                            <small class="text-muted">{{ photo.upload_date|date:"F j, Y" }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <h4 class="text-muted">No photos found</h4>
+                    <a href="?" class="btn btn-primary mt-3">View All Photos</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <div class="lightbox-content">
+        <img id="lightbox-img" class="lightbox-img" src="" alt="">
+    </div>
+    <span class="lightbox-nav lightbox-prev" onclick="prevPhoto()">&#10094;</span>
+    <span class="lightbox-nav lightbox-next" onclick="nextPhoto()">&#10095;</span>
+    
+    <!-- Thumbnail Slider -->
+    <div class="thumbnail-slider" id="thumbnailSlider">
+        {% for photo in photos %}
+        <img src="{{ photo.image.url }}" 
+             class="{% if forloop.first %}active{% endif %}" 
+             onclick="showPhotoFromThumbnail({{ forloop.counter0 }})"
+             data-index="{{ forloop.counter0 }}"
+             alt="Thumbnail">
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Lightbox functionality
+const photos = JSON.parse('{{ photo_list_json|escapejs }}');
+let currentIndex = 0;
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+const thumbnailSlider = document.getElementById('thumbnailSlider');
+
+function openLightbox(index) {
+    currentIndex = index;
+    lightboxImg.src = photos[index].image;
+    lightboxImg.alt = photos[index].title;
+    lightbox.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    updateActiveThumbnail(index);
+}
+
+function closeLightbox() {
+    lightbox.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function showPhoto(index) {
+    if (photos.length === 0) return;
+    
+    // Handle looping
+    if (index >= photos.length) {
+        index = 0; // Loop to first
+    } else if (index < 0) {
+        index = photos.length - 1; // Loop to last
+    }
+    
+    currentIndex = index;
+    lightboxImg.src = photos[index].image;
+    lightboxImg.alt = photos[index].title;
+    updateActiveThumbnail(index);
+}
+
+function updateActiveThumbnail(index) {
+    // Remove active class from all thumbnails
+    document.querySelectorAll('.thumbnail-slider img').forEach(thumb => {
+        thumb.classList.remove('active');
+    });
+    
+    // Add active class to current thumbnail
+    const activeThumb = document.querySelector(`.thumbnail-slider img[data-index="${index}"]`);
+    if (activeThumb) {
+        activeThumb.classList.add('active');
+        // Scroll thumbnail into view
+        activeThumb.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
+    }
+}
+
+function showPhotoFromThumbnail(index) {
+    showPhoto(index);
+}
+
+function nextPhoto() {
+    showPhoto(currentIndex + 1);
+}
+
+function prevPhoto() {
+    showPhoto(currentIndex - 1);
+}
+
+// Keyboard controls
+document.addEventListener('keydown', function(e) {
+    if (lightbox.style.display === 'block') {
+        switch(e.key) {
+            case 'Escape': closeLightbox(); break;
+            case 'ArrowRight': nextPhoto(); break;
+            case 'ArrowLeft': prevPhoto(); break;
+        }
+    }
+});
+
+// Initialize click handlers
+document.querySelectorAll('.gallery-item').forEach((item, index) => {
+    item.addEventListener('click', function(e) {
+        e.preventDefault();
+        openLightbox(index);
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Client Testimonials | {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Hero Section -->
+        <div class="text-center mb-16">
+            <span class="inline-block mb-4 text-primary-600 font-medium text-sm uppercase tracking-wider relative pl-4 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-2 before:h-2 before:rounded-full before:bg-primary-500 before:animate-pulse">
+                Client Stories
+            </span>
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 relative inline-block">
+                <span class="relative z-10">What Our Clients Say</span>
+                <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-1.5 bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 rounded-full"></span>
+            </h1>
+            
+            <!-- Stats Cards -->
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+                <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+                    <div class="text-5xl font-bold text-primary-600 mb-2">{{ total_testimonials }}+</div>
+                    <div class="text-gray-500 uppercase text-xs tracking-wider font-medium">Happy Clients</div>
+                    <div class="mt-4 h-1 w-full bg-gray-100 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+                    <div class="text-5xl font-bold text-primary-600 mb-2">{{ average_rating|floatformat:1 }}<span class="text-2xl">/5</span></div>
+                    <div class="text-gray-500 uppercase text-xs tracking-wider font-medium">Average Rating</div>
+                    <div class="mt-4 flex items-center justify-center space-x-1">
+                        {% for i in "12345"|make_list %}
+                            <i class="ri-star-fill text-2xl {% if forloop.counter <= average_rating %}text-yellow-400{% else %}text-gray-200{% endif %}"></i>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Service Filter -->
+        <div class="mb-16 px-4">
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="{% url 'testimonials:testimonial_list' %}" 
+                   class="px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ease-out shadow-lg {% if not request.resolver_match.url_name == 'service_testimonials' %}bg-primary-600 text-white hover:shadow-xl hover:-translate-y-0.5{% else %}bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 hover:shadow-md{% endif %}">
+                    All Testimonials
+                </a>
+                {% for value, label in service_types %}
+                    <a href="{% url 'testimonials:service_testimonials' value %}" 
+                       class="px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ease-out shadow-lg {% if request.resolver_match.url_name == 'service_testimonials' and request.resolver_match.kwargs.service_type == value %}bg-primary-600 text-white hover:shadow-xl hover:-translate-y-0.5{% else %}bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 hover:shadow-md{% endif %}">
+                        {{ label }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Testimonials Grid -->
+        {% if testimonials %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 mb-16">
+                {% for testimonial in testimonials %}
+                    {% include 'testimonials/includes/testimonial_card.html' %}
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if is_paginated %}
+                <div class="flex items-center justify-center mt-12">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 rounded-l-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 transition-colors">
+                            &laquo; Previous
+                        </a>
+                    {% endif %}
+                    
+                    <span class="px-4 py-2 bg-white border-t border-b border-gray-200 text-gray-700">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+                    
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 rounded-r-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 transition-colors">
+                            Next &raquo;
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <!-- Empty State (fallback) -->
+            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 max-w-4xl mx-auto">
+                <div class="p-12 text-center">
+                    <div class="mx-auto h-24 w-24 flex items-center justify-center rounded-full bg-primary-50 text-primary-600 mb-6">
+                        <i class="ri-chat-quote-line text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">No testimonials yet</h3>
+                    <p class="text-gray-500 max-w-md mx-auto mb-8">We haven't received any testimonials for this service yet. Check back later!</p>
+                    <button class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-primary-600 hover:bg-primary-700 transition-all hover:-translate-y-0.5 hover:shadow-md" onclick="alert('Contact functionality coming soon')">
+                        Share Your Experience
+                    </button>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

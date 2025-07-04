@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - Timeless Moments{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .contact-hero {
+        background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('{% static "images/contact-bg.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        padding: 120px 0;
+        margin-bottom: 0;
+    }
+    
+    .contact-container {
+        background: rgba(248, 244, 233, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.15);
+        overflow: hidden;
+    }
+    
+    .contact-card {
+        background: rgba(248, 244, 233, 0.85);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        border: none;
+        backdrop-filter: blur(5px);
+    }
+    
+    .contact-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(212, 175, 55, 0.15);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+    
+    .contact-card:hover .contact-icon {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+    }
+    
+    .contact-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--gradient-gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 32px;
+        color: white;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+    
+    .form-control, .form-select {
+        border-radius: 12px;
+        padding: 15px 20px;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        background: rgba(248, 244, 233, 0.8);
+        transition: all 0.3s ease;
+        color: var(--primary);
+    }
+    
+    .form-control:focus, .form-select:focus {
+        background: var(--light);
+        box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+        border-color: var(--secondary);
+    }
+    
+    .btn-submit {
+        background: var(--gradient-gold);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        color: white;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="contact-hero text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold" style="color: var(--light);" data-aos="fade-up" data-aos-duration="800">Contact Us</h1>
+        <p class="lead" style="color: var(--neutral);" data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">We'd love to hear from you. Let's create something beautiful together.</p>
+        <div class="mx-auto" style="width: 80px; height: 4px; background: var(--gradient-gold); margin-top: 25px;" data-aos="fade-up" data-aos-duration="800" data-aos-delay="400"></div>
+    </div>
+</section>
+
+<section class="py-5" style="background: linear-gradient(135deg, var(--light) 0%, rgba(248, 244, 233, 0.8) 100%);">
+    <div class="container py-5">
+        <div class="row g-4" data-aos="fade-up" data-aos-duration="1000">
+            <div class="col-lg-6" data-aos="fade-right" data-aos-duration="800">
+                <div class="contact-container p-4 p-lg-5">
+                    <h2 class="fw-bold mb-4" style="color: var(--primary);">Send Us a Message</h2>
+                    <div style="width: 60px; height: 3px; background: var(--gradient-gold); margin-bottom: 25px;"></div>
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <input type="text" class="form-control" placeholder="Your Name" required>
+                        </div>
+                        <div class="mb-4">
+                            <input type="email" class="form-control" placeholder="Email Address" required>
+                        </div>
+                        <div class="mb-4">
+                            <input type="tel" class="form-control" placeholder="Phone Number">
+                        </div>
+                        <div class="mb-4">
+                            <textarea class="form-control" rows="5" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-submit">Send Message</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-lg-6" data-aos="fade-left" data-aos-duration="800">
+                <div class="h-100 p-4 p-lg-5">
+                    <h2 class="fw-bold mb-4" style="color: var(--primary);">Contact Information</h2>
+                    <div style="width: 60px; height: 3px; background: var(--gradient-gold); margin-bottom: 25px;"></div>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="contact-card p-4 text-center h-100">
+                                <div class="contact-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <h5 class="fw-bold" style="color: var(--primary);">Our Studio</h5>
+                                <p class="mb-0" style="color: var(--neutral);">Bode - 8, Madhyapur Thimi<br>Bhaktapur, Nepal</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+                            <div class="contact-card p-4 text-center h-100">
+                                <div class="contact-icon">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <h5 class="fw-bold" style="color: var(--primary);">Call Us</h5>
+                                <p class="mb-0" style="color: var(--neutral);">+977 9763419089<br>Mon-Fri, 9am-5pm</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
+                            <div class="contact-card p-4 text-center h-100">
+                                <div class="contact-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <h5 class="fw-bold" style="color: var(--primary);">Email Us</h5>
+                                <p class="mb-0" style="color: var(--neutral);">timelessmomentsgallery@gmail.com<br>response within 24 hours</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
+                            <div class="contact-card p-4 text-center h-100">
+                                <div class="contact-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <h5 class="fw-bold" style="color: var(--primary);">Book a Session</h5>
+                                <p class="mb-0" style="color: var(--neutral);">Schedule online<br>or call to book</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Form validation
+(function () {
+    'use strict'
+    
+    var forms = document.querySelectorAll('.needs-validation')
+    
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                
+                form.classList.add('was-validated')
+            }, false)
+        })
+})()
+</script>
+{% endblock %}

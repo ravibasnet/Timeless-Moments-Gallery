@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ service.name }} - Timeless Moments Studio{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="service-hero py-6 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 order-lg-1 order-2">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent px-0">
+                        <li class="breadcrumb-item"><a href="{% url 'studio_services:service_list' %}">Services</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ service.name }}</li>
+                    </ol>
+                </nav>
+                
+                <h1 class="display-4 fw-bold mb-4">{{ service.name }}</h1>
+                <p class="lead text-muted mb-4">{{ service.short_description }}</p>
+                
+                <div class="d-flex gap-3 mb-4">
+                    <a href="{% url 'studio_services:book_service' service.slug %}" class="btn btn-primary btn-lg px-4">
+                        Book Now
+                    </a>
+                    <a href="#pricing" class="btn btn-outline-primary btn-lg px-4">
+                        View Pricing
+                    </a>
+                </div>
+                
+                <div class="d-flex flex-wrap gap-3">
+                    {% if service.duration %}
+                    <div class="badge bg-light text-dark p-3">
+                        <i class="ri-time-line me-2"></i> {{ service.duration }} Session
+                    </div>
+                    {% endif %}
+                    
+                    {% if service.delivery_time %}
+                    <div class="badge bg-light text-dark p-3">
+                        <i class="ri-calendar-line me-2"></i> {{ service.delivery_time }} Delivery
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="col-lg-6 order-lg-2 order-1 mb-4 mb-lg-0">
+                {% if service.image %}
+                <div class="rounded-4 overflow-hidden shadow-lg">
+                    <img src="{{ service.image.url }}" alt="{{ service.name }}" class="img-fluid w-100" style="max-height: 500px; object-fit: cover;">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Service Details -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="pe-lg-4">
+                    <h2 class="h3 mb-4">About This Service</h2>
+                    <div class="content">
+                        {{ service.description|safe }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+                    <div class="card-body">
+                        <h3 class="h5 mb-4">Service Highlights</h3>
+                        <ul class="list-unstyled">
+                            {% for highlight in service.highlights.all %}
+                            <li class="mb-3 d-flex">
+                                <i class="ri-checkbox-circle-fill text-primary me-2 mt-1"></i>
+                                <span>{{ highlight.text }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <hr class="my-4">
+                        <a href="{% url 'studio_services:book_service' service.slug %}" class="btn btn-primary w-100">
+                            Book This Service
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="py-5 bg-light" id="pricing">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Pricing Options</h2>
+            <p class="lead text-muted">Choose the package that fits your needs</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for package in service.packages.all %}
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm {% if package.is_featured %}border-primary border-2{% endif %}">
+                    <div class="card-body p-4">
+                        {% if package.is_featured %}
+                        <span class="badge bg-primary rounded-pill mb-3">Most Popular</span>
+                        {% endif %}
+                        
+                        <h3 class="h4">{{ package.name }}</h3>
+                        <p class="display-5 fw-bold my-4">${{ package.price }}</p>
+                        
+                        <ul class="list-unstyled mb-4">
+                            {% for item in package.inclusions.all %}
+                            <li class="mb-2 d-flex">
+                                <i class="ri-check-line text-primary me-2 mt-1"></i>
+                                <span>{{ item.text }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <div class="card-footer bg-transparent border-0 pt-0 pb-4 px-4">
+                        <a href="{% url 'studio_services:book_service' service.slug %}?package={{ package.id }}" class="btn btn-outline-primary w-100">
+                            Select Package
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Preview -->
+{% if service.gallery_images.exists %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Gallery</h2>
+            <p class="lead text-muted">Examples from past {{ service.name }} sessions</p>
+        </div>
+        
+        <div class="row g-3">
+            {% for image in service.gallery_images.all|slice:":6" %}
+            <div class="col-md-4 col-6">
+                <a href="{{ image.image.url }}" data-fslightbox="gallery">
+                    <img src="{{ image.image.url }}" alt="" class="img-fluid rounded-3 shadow-sm" style="height: 250px; width: 100%; object-fit: cover;">
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if service.gallery_images.count > 6 %}
+        <div class="text-center mt-4">
+            <a href="{% url 'studio_gallery:service_gallery' service.slug %}" class="btn btn-outline-primary">
+                View Full Gallery
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="display-5 fw-bold mb-4">Ready to book your session?</h2>
+        <p class="lead mb-5">Contact us today to schedule your {{ service.name }} photography experience</p>
+        <a href="{% url 'studio_services:book_service' service.slug %}" class="btn btn-light btn-lg px-5">
+            Get Started
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% endblock %}

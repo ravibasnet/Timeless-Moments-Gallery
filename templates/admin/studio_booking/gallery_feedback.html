@@ -1,0 +1,129 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/filepond@4.30.4/dist/filepond.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/filepond@4.30.4/dist/filepond.min.css" rel="stylesheet">
+<style>
+.filepond--root { margin-bottom: 1rem; }
+.filepond--drop-label { color: #444; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <form method="post" id="gallery_feedback_form" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="module aligned">
+            <h2>Gallery & Feedback for {{ original.client_name }}</h2>
+            
+            <div class="form-row">
+                <label>Upload Gallery Images:</label>
+                <input type="file" 
+                       class="filepond" 
+                       name="gallery_files" 
+                       multiple 
+                       accept="image/*">
+                <div class="help">Drag & drop images or click to browse</div>
+            </div>
+            
+            <div class="form-row">
+                <label>Current Gallery Images:</label>
+                <div class="gallery-preview">
+                    {% for img_url in gallery_images %}
+                    <div class="gallery-item">
+                        <img src="{{ img_url }}" style="max-height: 100px;">
+                        <input type="hidden" name="gallery_images" value="{{ img_url }}">
+                        <button type="button" class="delete-gallery-image" title="Remove image" style="margin-left:8px; color:#c00; background:none; border:none; font-size:1.2em; cursor:pointer;">&times;</button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <label>Client Testimonial:</label>
+                <textarea name="testimonial" rows="5" style="width:100%">{{ testimonial }}</textarea>
+            </div>
+            
+            <div class="form-row">
+                <label>
+                    <input type="checkbox" name="testimonial_approved" {% if testimonial_approved %}checked{% endif %}> 
+                    Approve testimonial for display
+                </label>
+            </div>
+        </div>
+        
+        <div class="submit-row">
+            <input type="submit" value="Save" class="default" name="_save">
+            <a href="{% url 'admin:studio_booking_bookingsession_changelist' %}" class="closelink">Close</a>
+        </div>
+    </form>
+</div>
+
+<script>
+// Initialize FilePond with error handling and sync hidden inputs
+document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const galleryPreview = document.querySelector('.gallery-preview');
+    const form = document.getElementById('gallery_feedback_form');
+
+    FilePond.setOptions({
+        allowMultiple: true,
+        maxFiles: 20,
+        server: {
+            url: '{% url "studio_booking:upload_gallery_image" original.id %}',
+            process: {
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                onload: (response) => {
+                    // Parse the response and add a hidden input for the new image
+                    const data = JSON.parse(response);
+                    if (data.url) {
+                        const div = document.createElement('div');
+                        div.className = 'gallery-item';
+                        div.innerHTML = `<img src="${data.url}" style="max-height: 100px;">
+                            <input type="hidden" name="gallery_images" value="${data.url}">
+                            <button type="button" class="delete-gallery-image" title="Remove image" style="margin-left:8px; color:#c00; background:none; border:none; font-size:1.2em; cursor:pointer;">&times;</button>`;
+                        galleryPreview.appendChild(div);
+                    }
+                    // Return the URL as serverId for removefile
+                    return data.url;
+                },
+                onerror: (response) => {
+                    console.error('Upload error:', response);
+                    alert('Upload failed: ' + response);
+                }
+            }
+        }
+    });
+
+    const pond = FilePond.create(
+        document.querySelector('input.filepond')
+    );
+
+    // Remove hidden input and preview when delete button is clicked
+    galleryPreview.addEventListener('click', function(e) {
+        if (e.target.classList.contains('delete-gallery-image')) {
+            e.preventDefault();
+            e.target.parentElement.remove();
+        }
+    });
+
+    // Remove hidden input when file is removed from FilePond
+    pond.on('removefile', (error, file) => {
+        if (file && file.serverId) {
+            // Remove the corresponding hidden input
+            const inputs = galleryPreview.querySelectorAll('input[name="gallery_images"]');
+            inputs.forEach(input => {
+                if (input.value === file.serverId) {
+                    input.parentElement.remove();
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

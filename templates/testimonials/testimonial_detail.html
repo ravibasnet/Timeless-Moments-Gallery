@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ testimonial.client_name }}'s Testimonial | {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-b from-gray-50 to-white py-16">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <!-- Back Button -->
+        <div class="mb-8">
+            <a href="{% url 'testimonials:testimonial_list' %}" 
+               class="inline-flex items-center text-primary-600 hover:text-primary-800 font-medium transition-colors group">
+                <i class="ri-arrow-left-line mr-1 transition-transform group-hover:-translate-x-1"></i> Back to All Testimonials
+            </a>
+        </div>
+        
+        <!-- Testimonial Card -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-primary-500 to-primary-600 p-8 text-white relative">
+                <div class="flex flex-col md:flex-row items-center">
+                    {% if testimonial.client_photo %}
+                        <div class="mb-6 md:mb-0 md:mr-8">
+                            <img src="{{ testimonial.client_photo.url }}" 
+                                 alt="{{ testimonial.client_name }}" 
+                                 class="w-32 h-32 rounded-full border-4 border-white/50 shadow-xl ring-2 ring-white/30 object-cover">
+                        </div>
+                    {% else %}
+                        <div class="mb-6 md:mb-0 md:mr-8 w-32 h-32 rounded-full bg-white/20 flex items-center justify-center shadow-xl">
+                            <i class="ri-user-line text-5xl text-white/70"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="text-center md:text-left">
+                        <h1 class="text-3xl font-bold mb-2">{{ testimonial.client_name }}</h1>
+                        {% if testimonial.client_role %}
+                            <p class="text-primary-100/90 text-lg mb-3">{{ testimonial.client_role }}</p>
+                        {% endif %}
+                        <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+                            <div class="flex items-center">
+                                {% for i in "12345"|make_list %}
+                                    {% if forloop.counter <= testimonial.rating %}
+                                        <i class="ri-star-fill text-yellow-300 text-2xl mr-1"></i>
+                                    {% else %}
+                                        <i class="ri-star-line text-yellow-300 text-2xl mr-1"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="text-white font-medium ml-1">{{ testimonial.rating }}.0</span>
+                            </div>
+                            <span class="bg-white/20 px-4 py-1 rounded-full text-sm font-medium">
+                                {{ testimonial.get_service_type_display }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Service Icon -->
+                <div class="absolute top-6 right-6 bg-white/20 rounded-full w-12 h-12 flex items-center justify-center shadow-md">
+                    <i class="{{ testimonial.service_icon }} text-xl text-white"></i>
+                </div>
+            </div>
+            
+            <!-- Content -->
+            <div class="p-8 md:p-10">
+                <div class="prose max-w-none">
+                    <blockquote class="text-gray-700 text-lg leading-relaxed italic border-l-4 border-primary-500 pl-6 my-6">
+                        "{{ testimonial.content }}"
+                    </blockquote>
+                    
+                    <div class="bg-gray-50 px-6 py-5 rounded-lg border border-gray-100 mt-10">
+                        <div class="flex items-center text-gray-500 text-sm">
+                            <i class="ri-calendar-line mr-2"></i>
+                            Posted on {{ testimonial.created_at|date:"F j, Y" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Related Testimonials -->
+        {% if related_testimonials %}
+        <div class="mt-16">
+            <h3 class="text-2xl font-bold text-gray-900 mb-8 text-center">More from {{ testimonial.get_service_type_display }} clients</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for testimonial in related_testimonials %}
+                    {% include 'testimonials/includes/testimonial_card.html' %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

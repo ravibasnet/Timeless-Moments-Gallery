@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section py-5" style="background: var(--primary); color: var(--light);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
+                <h1 class="display-3 fw-bold mb-4">Our Services</h1>
+                <p class="lead mb-4">Professional photography services designed to capture your special moments with artistry and care.</p>
+                <div class="mt-4" style="width: 80px; height: 3px; background: var(--gradient-gold); border-radius: 3px;"></div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+                <img src="{% static 'images/services-hero.jpg' %}" alt="Our Services" class="img-fluid rounded shadow-lg hover-zoom">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Services -->
+<section class="py-5" style="background: var(--light);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-4 mb-3" style="color: var(--primary);" data-aos="fade-up" data-aos-duration="800">Featured Services</h2>
+            <p class="lead" style="color: var(--neutral);">Our most popular photography packages</p>
+            <div class="mx-auto mt-3" style="width: 80px; height: 3px; background: var(--gradient-gold); border-radius: 3px;"></div>
+        </div>
+        
+        <div class="row g-4">
+            {% for service in featured_services %}
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:"100" }}">
+                <div class="card h-100 border-0 shadow-sm hover-zoom" style="border-radius: 15px; overflow: hidden;">
+                    {% if service.image %}
+                     <div class="position-relative overflow-hidden">
+                         <img src="{{ service.image.url }}" class="card-img-top" alt="{{ service.name }}" style="height: 200px; object-fit: cover; transition: all 0.5s ease;" onmouseover="this.style.transform='scale(1.05)'; this.nextElementSibling.style.opacity='1';" onmouseout="this.style.transform='scale(1)'; this.nextElementSibling.style.opacity='0';">
+                         <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background: rgba(15, 23, 42, 0.3); opacity: 0; transition: all 0.5s ease;">
+                             <span class="badge" style="background: var(--secondary); color: white;">View Service</span>
+                         </div>
+                     </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 class="h4" style="color: var(--primary);">{{ service.name }}</h3>
+                        <p style="color: var(--neutral);">{{ service.short_description }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="{% url 'studio_services:service_detail' service.slug %}" class="btn" style="background: transparent; color: var(--secondary); border: 1px solid var(--secondary); transition: all 0.3s ease;" onmouseover="this.style.background='var(--secondary)'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='var(--secondary)';">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- All Services -->
+<section class="py-5" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.03) 0%, rgba(107, 122, 161, 0.05) 100%);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-4 mb-3" style="color: var(--primary);" data-aos="fade-up" data-aos-duration="800">All Services</h2>
+            <p class="lead" style="color: var(--neutral);">Complete list of our photography services</p>
+            <div class="mx-auto mt-3" style="width: 80px; height: 3px; background: var(--gradient-gold); border-radius: 3px;"></div>
+        </div>
+        
+        <div class="row g-4">
+            {% for service in services %}
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:"100" }}">
+                <div class="card h-100 border-0 shadow-sm hover-zoom" style="border-radius: 15px; overflow: hidden; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px);">
+                    {% if service.image %}
+                    <div class="position-relative overflow-hidden">
+                        <img src="{{ service.image.url }}" class="card-img-top" alt="{{ service.name }}" style="height: 200px; object-fit: cover; transition: all 0.5s ease;" onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';">
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge" style="background: var(--secondary); color: white;">Photography</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 class="h4" style="color: var(--primary);">{{ service.name }}</h3>
+                        <p style="color: var(--neutral);">{{ service.short_description }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="{% url 'studio_services:service_detail' service.slug %}" class="btn" style="background: var(--secondary); color: white; border: none; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 8px rgba(212, 175, 55, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            View Details <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

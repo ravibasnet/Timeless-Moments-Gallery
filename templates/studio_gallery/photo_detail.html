@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="mb-4">{{ photo.title }}</h1>
+            <img src="{{ photo.image.url }}" class="img-fluid mb-4" alt="{{ photo.title }}">
+            {% if photo.description %}
+            <p class="lead">{{ photo.description }}</p>
+            {% endif %}
+            <p class="text-muted">Uploaded: {{ photo.upload_date|date:"F j, Y" }}</p>
+            <a href="{% url 'studio_gallery:category' photo.category.slug %}" class="btn btn-primary">
+                Back to {{ photo.category.name }}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

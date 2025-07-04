@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'studio_booking/css/spa.css' %}">
+<link rel="stylesheet" href="{% static 'studio_booking/css/input.css' %}">
+<link rel="stylesheet" href="{% static 'studio_booking/css/style.css' %}">
+
+{% block title %}Book Your Session - Timeless Moments{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Calendar -->
+        <div class="lg:col-span-2">
+            <div class="booking-calendar">
+                <div class="calendar-header">
+                    <div class="calendar-nav">
+                        <button class="nav-btn calendar-nav-btn" data-direction="prev">←</button>
+                        <div class="flex items-center gap-4 calendar-today-group">
+                            <button id="today-btn" class="responsive-today-btn">Today</button>
+                            <h2 id="current-month" class="text-lg font-semibold"></h2>
+                        </div>
+                        <button class="nav-btn calendar-nav-btn" data-direction="next">→</button>
+                    </div>
+                </div>
+                <div class="calendar-grid"></div>
+            </div>
+        </div>
+
+        <!-- Side Panel -->
+        <div class="side-panel">
+            <h3>Selected Dates</h3>
+            <div class="selected-dates"></div>
+            <button class="continue-btn" disabled>Continue to Booking</button>
+            <button id="openRecentWorkBtn" class="mt-6 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold text-lg shadow-lg hover:from-indigo-500 hover:to-blue-500 transition-all duration-200 w-full">
+                View Recent Work
+            </button>
+        </div>
+    </div>
+
+    <!-- Booking Form Popup -->
+    <div id="booking-popup" class="booking-popup">
+        <div class="booking-popup-content">
+            <button id="close-popup" class="close-popup">×</button>
+            <h2 class="text-2xl font-semibold mb-6">Complete Your Booking</h2>
+            
+            <form id="booking-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label class="form-label" for="client_name">Full Name *</label>
+                    <input type="text" id="client_name" name="client_name" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="client_email">Email *</label>
+                    <input type="email" id="client_email" name="client_email" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="client_phone">Phone Number *</label>
+                    <input type="tel" id="client_phone" name="client_phone" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="session_type">Session Type *</label>
+                    <select id="session_type" name="session_type" class="form-select" required>
+                        <option value="">Select a session type</option>
+                        <option value="portrait">Portrait Session</option>
+                        <option value="family">Family Session</option>
+                        <option value="event">Event Coverage</option>
+                        <option value="wedding">Wedding Photography</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="duration">Session Duration *</label>
+                    <select id="duration" name="duration" class="form-select" required>
+                        <option value="">Select duration</option>
+                        <option value="1">1 Hour</option>
+                        <option value="2">2 Hours</option>
+                        <option value="3">3 Hours</option>
+                        <option value="4">4 Hours</option>
+                        <option value="8">Full Day</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="location">Location *</label>
+                    <select id="location" name="location" class="form-select" required>
+                        <option value="">Select location</option>
+                        <option value="studio">Studio</option>
+                        <option value="outdoor">Outdoor</option>
+                        <option value="client">Client's Location</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="special_requests">Additional Notes</label>
+                    <textarea id="special_requests" name="special_requests" class="form-input" rows="3"></textarea>
+                </div>
+
+                <button type="submit" id="submit-booking-btn" class="submit-btn">
+                    <span>Submit Booking</span>
+                    <span id="booking-spinner" class="spinner hidden"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Calendar Event Modal -->
+    <div id="calendar-event-modal" style="display:none;position:fixed;z-index:1000;top:0;left:0;width:100vw;height:100vh;background:rgba(30,41,59,0.45);align-items:center;justify-content:center;">
+        <div id="calendar-event-modal-content" style="background:#fff;border-radius:1.2rem;box-shadow:0 8px 32px rgba(0,0,0,0.18);max-width:90vw;max-height:90vh;overflow:auto;"></div>
+    </div>
+</div>
+
+<!-- Recent Work Modal -->
+<div class="recent-work-modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm" id="recentWorkModal" style="display:none;">
+    <div class="modal-content bg-white rounded-3xl shadow-2xl p-10 max-w-3xl w-full mx-4 relative flex flex-col">
+        <div class="modal-header flex items-center justify-between mb-6">
+            <h3 class="text-3xl font-extrabold text-gray-900 tracking-tight">Recent Work</h3>
+            <button class="close-modal text-gray-400 hover:text-red-500 text-3xl font-bold" id="closeModal">&times;</button>
+        </div>
+        <p class="text-gray-500 mb-6 text-lg">See our latest completed sessions and their best moments.</p>
+        <div id="workGridLoading" class="flex justify-center items-center py-10 hidden">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
+        </div>
+        <div class="work-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8" id="workGrid">
+            <!-- Work items will be loaded here -->
+        </div>
+        <div id="workGridEmpty" class="text-center text-gray-400 text-lg py-8 hidden">No recent work found.</div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script src="{% static 'studio_booking/js/calendar.js' %}"></script>
+<script>
+// Modern, visually rich, and user-friendly Recent Work modal logic with real data
+const openRecentWorkBtn = document.getElementById('openRecentWorkBtn');
+const recentWorkModal = document.getElementById('recentWorkModal');
+const closeModalBtn = document.getElementById('closeModal');
+const workGrid = document.getElementById('workGrid');
+const workGridLoading = document.getElementById('workGridLoading');
+const workGridEmpty = document.getElementById('workGridEmpty');
+
+function renderWorkCard(work) {
+    const img = (work.gallery_images && work.gallery_images.length > 0) ? work.gallery_images[0] : '/static/images/hero.jpg';
+    const sessionType = work.session_type ? work.session_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Session';
+    const date = work.dates && work.dates.length > 0 ? work.dates[0] : work.created_at;
+    return `
+        <div class="rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-white to-blue-50 hover:shadow-2xl transition-all flex flex-col">
+            <img src="${img}" alt="${sessionType}" class="w-full h-48 object-cover">
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <div>
+                    <h4 class="font-bold text-xl text-indigo-700 mb-1">${sessionType}</h4>
+                    <p class="text-gray-500 text-sm mb-2">${date}</p>
+                    <p class="text-gray-700 text-base font-medium">${work.client_name}</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function fetchRecentWork() {
+    workGrid.innerHTML = '';
+    workGridLoading.classList.remove('hidden');
+    workGridEmpty.classList.add('hidden');
+    fetch('/booking/api/bookings/?status=completed&limit=3')
+        .then(res => res.json())
+        .then(data => {
+            workGridLoading.classList.add('hidden');
+            if (Array.isArray(data) && data.length > 0) {
+                workGrid.innerHTML = data.map(renderWorkCard).join('');
+            } else {
+                workGrid.innerHTML = '';
+                workGridEmpty.classList.remove('hidden');
+            }
+        })
+        .catch(() => {
+            workGridLoading.classList.add('hidden');
+            workGrid.innerHTML = '';
+            workGridEmpty.classList.remove('hidden');
+        });
+}
+
+openRecentWorkBtn.addEventListener('click', () => {
+    recentWorkModal.style.display = 'flex';
+    fetchRecentWork();
+    setTimeout(() => recentWorkModal.classList.add('show'), 10);
+});
+closeModalBtn.addEventListener('click', () => {
+    recentWorkModal.classList.remove('show');
+    setTimeout(() => recentWorkModal.style.display = 'none', 300);
+});
+recentWorkModal.addEventListener('click', (e) => {
+    if (e.target === recentWorkModal) {
+        recentWorkModal.classList.remove('show');
+        setTimeout(() => recentWorkModal.style.display = 'none', 300);
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}
+

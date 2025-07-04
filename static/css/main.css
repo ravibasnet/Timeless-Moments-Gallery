@@ -1,0 +1,232 @@
+/* Modern Gallery Styles */
+.hover-zoom {
+    transition: transform 0.3s ease;
+}
+
+.hover-zoom:hover {
+    transform: scale(1.03);
+}
+
+.bg-dark-50 {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-content {
+    background-color: transparent;
+    border: none;
+}
+
+.modal-footer {
+    background-color: white;
+    border-top: none;
+}
+
+/* Full-screen Viewer Styles */
+.fullscreen-viewer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.fullscreen-image {
+    max-height: 90vh;
+    max-width: 90vw;
+    object-fit: contain;
+}
+
+.nav-button {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    z-index: 1000;
+}
+
+.nav-button:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.nav-prev {
+    left: 20px;
+}
+
+.nav-next {
+    right: 20px;
+}
+
+.close-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 2rem;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    z-index: 1000;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Loading state */
+.loading .fullscreen-image {
+    opacity: 0.5;
+}
+
+/* Lightbox Styles */
+.lightbox {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0,0,0,0.9);
+}
+
+.lightbox-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.lightbox-img {
+  max-width: 90%;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  background: rgba(0,0,0,0.5);
+  padding: 10px 15px;
+  border-radius: 50%;
+}
+
+.lightbox-prev {
+  left: 20px;
+}
+
+.lightbox-next {
+  right: 20px;
+}
+
+/* Thumbnail Slider */
+.thumbnail-slider {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: rgba(0,0,0,0.7);
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 10px 0;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+}
+
+.thumbnail-slider img {
+    height: 80px;
+    width: auto;
+    margin: 0 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.thumbnail-slider img.active {
+    border-color: white;
+    transform: scale(1.1);
+}
+
+.thumbnail-slider img:hover {
+    opacity: 0.8;
+}
+
+/* Service Card Styles */
+.service-card {
+    transition: all 0.3s ease;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.service-image img {
+    transition: transform 0.5s ease;
+}
+
+.service-card:hover .service-image img {
+    transform: scale(1.05);
+}
+
+/* Featured Services Section */
+#featured-services {
+    background-color: #f8f9fa;
+}
+
+#featured-services .service-card {
+    border-left: 4px solid var(--primary);
+}
+
+/* All Services Section */
+#all-services {
+    background-color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .service-card {
+        margin-bottom: 1.5rem;
+    }
+}

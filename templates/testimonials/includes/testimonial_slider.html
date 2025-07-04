@@ -1,0 +1,308 @@
+{% load static %}
+
+<section id="testimonials" class="py-20 bg-gradient-to-br from-gray-50 via-white to-primary-50/30 relative overflow-hidden">
+    <!-- Background Decorative Elements -->
+    <div class="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-primary-100/30 to-transparent rounded-full -translate-x-48 -translate-y-48 blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-secondary/20 to-transparent rounded-full translate-x-48 translate-y-48 blur-3xl"></div>
+    
+    <div class="container mx-auto px-4 max-w-7xl relative z-10">
+        <!-- Enhanced Section Header -->
+        {% if show_title %}
+        <div class="text-center mb-16" data-aos="fade-up">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl mb-6 shadow-lg">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+            </div>
+            
+            <span class="inline-block text-primary-600 font-bold text-sm uppercase tracking-wider mb-4 bg-primary-50 px-4 py-2 rounded-full">
+                Client Stories
+            </span>
+            
+            <h2 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                What Our 
+                <span class="bg-gradient-to-r from-primary-600 to-secondary bg-clip-text text-transparent">
+                    Clients
+                </span> 
+                Say
+            </h2>
+            
+            <div class="flex items-center justify-center mb-8">
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-primary-500 to-transparent rounded-full"></div>
+                <div class="w-3 h-3 bg-primary-500 rounded-full mx-4"></div>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-primary-500 to-transparent rounded-full"></div>
+            </div>
+            
+            <p class="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed">
+                Discover the experiences and stories from our valued clients who trusted us to capture their most precious moments
+            </p>
+            
+            {% if show_view_all %}
+            <div class="mt-10" data-aos="fade-up" data-aos-delay="200">
+                <a href="{% url 'testimonials:testimonial_list' %}" 
+                   class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 group">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    View All Testimonials
+                    <svg class="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <!-- Enhanced Testimonial Slider -->
+        <div class="relative px-4 md:px-8" data-aos="fade-up" data-aos-delay="300">
+            <div class="testimonial-slider-improved swiper-container">
+                <div class="swiper-wrapper pb-16">
+                    {% for testimonial in testimonials %}
+                    <div class="swiper-slide h-auto flex justify-center">
+                        {% include 'testimonials/includes/testimonial_card.html' %}
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Enhanced Navigation -->
+                <div class="swiper-button-prev testimonial-nav-btn">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                    </svg>
+                </div>
+                <div class="swiper-button-next testimonial-nav-btn">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                    </svg>
+                </div>
+                
+                <!-- Enhanced Pagination -->
+                <div class="swiper-pagination testimonial-pagination"></div>
+            </div>
+        </div>
+        
+        <!-- Trust Indicators -->
+        <div class="mt-16 text-center" data-aos="fade-up" data-aos-delay="400">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+                <div class="flex flex-col items-center">
+                    <div class="text-3xl font-bold text-primary-600 mb-2">500+</div>
+                    <div class="text-sm text-gray-600">Happy Clients</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-3xl font-bold text-primary-600 mb-2">5.0</div>
+                    <div class="text-sm text-gray-600">Average Rating</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-3xl font-bold text-primary-600 mb-2">1000+</div>
+                    <div class="text-sm text-gray-600">Photos Captured</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-3xl font-bold text-primary-600 mb-2">5+</div>
+                    <div class="text-sm text-gray-600">Years Experience</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Swiper Initialization -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const testimonialSwiper = new Swiper('.testimonial-slider-improved', {
+        slidesPerView: 1,
+        spaceBetween: 32,
+        loop: true,
+        loopAdditionalSlides: 3,
+        speed: 1000,
+        autoplay: {
+            delay: 6000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+        },
+        grabCursor: true,
+        watchSlidesProgress: true,
+        parallax: true,
+        effect: 'slide',
+        pagination: {
+            el: '.testimonial-pagination',
+            clickable: true,
+            dynamicBullets: true,
+            dynamicMainBullets: 3,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+                spaceBetween: 24,
+            },
+            1024: {
+                slidesPerView: 3,
+                spaceBetween: 32,
+            },
+            1280: {
+                slidesPerView: 3,
+                spaceBetween: 40,
+            },
+        },
+        on: {
+            init: function() {
+                // Add entrance animation to visible slides
+                this.slides.forEach((slide, index) => {
+                    if (index < this.params.slidesPerView) {
+                        slide.style.opacity = '0';
+                        slide.style.transform = 'translateY(50px)';
+                        setTimeout(() => {
+                            slide.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                            slide.style.opacity = '1';
+                            slide.style.transform = 'translateY(0)';
+                        }, index * 200);
+                    }
+                });
+            },
+            slideChange: function() {
+                // Add subtle animation on slide change
+                this.slides.forEach(slide => {
+                    slide.style.transform = 'scale(0.95)';
+                    slide.style.opacity = '0.7';
+                });
+                
+                // Highlight active slides
+                setTimeout(() => {
+                    this.slides.forEach((slide, index) => {
+                        if (slide.classList.contains('swiper-slide-active') || 
+                            slide.classList.contains('swiper-slide-next') || 
+                            slide.classList.contains('swiper-slide-prev')) {
+                            slide.style.transform = 'scale(1)';
+                            slide.style.opacity = '1';
+                        }
+                    });
+                }, 100);
+            }
+        }
+    });
+    
+    // Pause autoplay on hover
+    const swiperContainer = document.querySelector('.testimonial-slider-improved');
+    if (swiperContainer) {
+        swiperContainer.addEventListener('mouseenter', () => {
+            testimonialSwiper.autoplay.stop();
+        });
+        
+        swiperContainer.addEventListener('mouseleave', () => {
+            testimonialSwiper.autoplay.start();
+        });
+    }
+});
+</script>
+
+<!-- Enhanced Custom Styles -->
+<style>
+.testimonial-slider-improved {
+    padding: 20px 0 60px;
+    overflow: visible;
+}
+
+.testimonial-slider-improved .swiper-slide {
+    height: auto;
+    display: flex;
+    justify-content: center;
+    padding: 12px;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced Navigation Buttons */
+.testimonial-nav-btn {
+    width: 56px !important;
+    height: 56px !important;
+    background: linear-gradient(135deg, #4F46E5, #7C3AED) !important;
+    border-radius: 50% !important;
+    color: white !important;
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+.testimonial-nav-btn:hover {
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 0 15px 35px rgba(79, 70, 229, 0.4) !important;
+    background: linear-gradient(135deg, #5B21B6, #4F46E5) !important;
+}
+
+.testimonial-nav-btn:after {
+    display: none !important;
+}
+
+.testimonial-nav-btn.swiper-button-disabled {
+    opacity: 0.3 !important;
+    transform: scale(0.9) !important;
+}
+
+/* Enhanced Pagination */
+.testimonial-pagination {
+    position: relative !important;
+    margin-top: 40px !important;
+    padding: 20px 0 !important;
+}
+
+.testimonial-pagination .swiper-pagination-bullet {
+    width: 12px !important;
+    height: 12px !important;
+    background: linear-gradient(135deg, #E5E7EB, #D1D5DB) !important;
+    opacity: 1 !important;
+    margin: 0 6px !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border: 2px solid white !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.testimonial-pagination .swiper-pagination-bullet-active {
+    background: linear-gradient(135deg, #4F46E5, #7C3AED) !important;
+    transform: scale(1.4) !important;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2), 0 4px 12px rgba(79, 70, 229, 0.3) !important;
+}
+
+.testimonial-pagination .swiper-pagination-bullet:hover {
+    transform: scale(1.2) !important;
+    background: linear-gradient(135deg, #6366F1, #8B5CF6) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .testimonial-nav-btn {
+        width: 48px !important;
+        height: 48px !important;
+    }
+    
+    .testimonial-slider-improved {
+        padding: 15px 0 50px;
+    }
+}
+
+/* Loading animation */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.testimonial-slider-improved .swiper-slide {
+    animation: slideInUp 0.8s ease-out;
+}
+
+/* Smooth transitions for all elements */
+.testimonial-slider-improved * {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+</style>
+

@@ -1,0 +1,16 @@
+Django>=4.2.0,<5.0.0
+Pillow>=10.0.0  # For image handling
+python-dotenv>=1.0.0  # For environment variables
+django-crispy-forms>=2.0  # For better form rendering
+crispy-bootstrap5>=0.7  # Bootstrap 5 template pack for crispy-forms
+whitenoise>=6.5.0  # For serving static files
+gunicorn>=21.2.0  # For production deployment
+djangorestframework==3.14.0
+
+# Admin UI enhancements
+# Note: We're using custom CSS/JS for admin theming instead of a third-party package
+# If you want to use a pre-built theme, consider installing one of these:
+# django-jazzmin>=2.6.0  # Modern admin theme based on AdminLTE
+# django-unfold>=0.6.0  # Admin theme built with Tailwind CSS
+python-decouple
+dj-database-url

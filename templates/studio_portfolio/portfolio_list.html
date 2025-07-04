@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+    .portfolio-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 2rem;
+    }
+    
+    .portfolio-card {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .portfolio-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    }
+    
+    .portfolio-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+    
+    .portfolio-info {
+        padding: 1.5rem;
+    }
+    
+    .portfolio-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .portfolio-meta {
+        display: flex;
+        gap: 1rem;
+        color: #64748b;
+        font-size: 0.875rem;
+    }
+    
+    .page-header {
+        text-align: center;
+        padding: 3rem 2rem 2rem;
+    }
+    
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Our Portfolio</h1>
+    <p>Explore our latest work and creative projects</p>
+</div>
+
+<div class="portfolio-list">
+    {% for portfolio in portfolios %}
+    <a href="{% url 'studio_portfolio:portfolio_detail' portfolio.slug %}" class="portfolio-card">
+        {% if portfolio.cover_image %}
+        <img src="{{ portfolio.cover_image.url }}" alt="{{ portfolio.title }}" class="portfolio-image">
+        {% endif %}
+        <div class="portfolio-info">
+            <h3 class="portfolio-title">{{ portfolio.title }}</h3>
+            <div class="portfolio-meta">
+                <span>{{ portfolio.event_date|date:"F Y" }}</span>
+                <span>{{ portfolio.location }}</span>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

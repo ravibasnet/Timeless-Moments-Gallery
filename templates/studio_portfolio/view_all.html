@@ -1,0 +1,28 @@
+{% extends 'studio_main/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold mb-3">All Portfolios</h1>
+            <p class="lead text-muted">Browse through our complete collection of work</p>
+        </div>
+
+        <div class="row g-4">
+            {% for portfolio in portfolios %}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <img src="{{ portfolio.cover_image.url }}" class="card-img-top" alt="{{ portfolio.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ portfolio.title }}</h5>
+                        <p class="card-text text-muted">{{ portfolio.event_date|date:"F Y" }}</p>
+                        <a href="{% url 'studio_portfolio:portfolio_detail' portfolio.slug %}" class="btn btn-primary">View Gallery</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

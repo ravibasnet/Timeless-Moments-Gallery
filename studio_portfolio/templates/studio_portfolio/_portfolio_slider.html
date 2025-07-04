@@ -1,0 +1,28 @@
+<section class="portfolio-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Our Portfolio</h2>
+            <p class="section-subtitle">Explore our recent work</p>
+        </div>
+        
+        <div class="portfolio-slider">
+            {% for portfolio in portfolios %}
+            <div class="portfolio-item">
+                <a href="{% url 'studio_portfolio:portfolio_detail' portfolio.slug %}">
+                    <div class="card border-0 shadow-sm h-100">
+                        <img src="{{ portfolio.cover_image.url }}" class="card-img-top" alt="{{ portfolio.title }}">
+                        <div class="card-body">
+                            <h3 class="h5 card-title">{{ portfolio.title }}</h3>
+                            <p class="card-text small">{{ portfolio.event_date|date:"F Y" }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'studio_portfolio:portfolio_list' %}" class="btn btn-outline-primary">View Full Portfolio</a>
+        </div>
+    </div>
+</section>

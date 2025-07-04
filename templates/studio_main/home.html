@@ -1,0 +1,661 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load testimonial_tags %}
+
+{% block title %}Welcome to Timeless Moments Studio{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Modern Hero Section */
+    .hero-section {
+        min-height: 100vh;
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                    url('{% static "images/hero.jpg" %}') center/cover no-repeat;
+        display: flex;
+        align-items: center;
+        color: white;
+        position: relative;
+        background-attachment: scroll;
+    }
+    
+    /* Feature Cards */
+    .feature-card {
+        transition: all 0.3s ease;
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+    
+    /* Modern Button Styles */
+    .btn-primary {
+        background-color: #6c63ff;
+        border: none;
+        padding: 12px 30px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+    }
+    
+    .btn-primary:hover {
+        background-color: #564fd1;
+        transform: translateY(-3px);
+    }
+    
+    /* Gallery Section */
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+    }
+    
+    .gallery-item:hover {
+        transform: scale(1.03);
+    }
+    
+    .gallery-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+    }
+    
+    /* 3D Card Tilt */
+    .feature-card {
+        transform-style: preserve-3d;
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .feature-card:hover {
+        transform: perspective(1000px) rotateY(10deg) rotateX(5deg) translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    
+    /* Glass Morphism */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    
+    /* Smooth Scroll */
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    /* Button Micro-interactions */
+    .btn-primary {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-primary:after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        bottom: -50%;
+        left: -50%;
+        background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+        transform: rotateZ(60deg) translate(-5em, 7.5em);
+    }
+    
+    .btn-primary:hover:after {
+        animation: shine 1.5s forwards;
+    }
+    
+    @keyframes shine {
+        100% {
+            transform: rotateZ(60deg) translate(1em, -1em);
+        }
+    }
+    
+    /* Our Services Section */
+    .service-card {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: white;
+    }
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+    }
+    .service-image-container {
+        position: relative;
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
+    }
+    .service-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    .service-card:hover .service-image {
+        transform: scale(1.05);
+    }
+    .service-image-placeholder {
+        width: 100%;
+        height: 100%;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: #ddd;
+    }
+    .service-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+        padding: 1.5rem 1rem 1rem;
+        display: flex;
+        gap: 0.5rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .service-card:hover .service-overlay {
+        opacity: 1;
+    }
+    .service-card-body {
+        padding: 1.5rem;
+    }
+    .service-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+    .service-excerpt {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 0;
+    }
+    .service-icon {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+    }
+    .service-description {
+        color: #666;
+        margin-bottom: 2rem;
+        flex-grow: 1;
+    }
+    .service-footer {
+        display: flex;
+        gap: 1rem;
+    }
+    .service-footer .btn {
+        flex: 1;
+    }
+    
+    /* Why Choose Us Section */
+    .why-choose-us {
+        background: linear-gradient(to bottom, #ffffff 0%, #f9f9f9 100%);
+    }
+    .feature-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    .feature-icon {
+        font-size: 2.5rem;
+        color: var(--primary);
+    }
+    .feature-icon i {
+        transition: transform 0.3s ease;
+    }
+    .feature-card:hover .feature-icon i {
+        transform: scale(1.1);
+    }
+    
+    /* Process Section */
+    .process-section {
+        background: linear-gradient(to right, #f8f9fa 0%, #ffffff 100%);
+    }
+    .process-steps {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .process-step {
+        display: flex;
+        align-items: center;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
+    }
+    .process-step:hover {
+        transform: translateY(-5px);
+    }
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background: var(--primary);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-right: 1.5rem;
+        flex-shrink: 0;
+    }
+    .step-content {
+        flex-grow: 1;
+    }
+    .step-arrow {
+        margin: 0 1rem;
+        color: var(--primary);
+        font-size: 1.5rem;
+    }
+    @media (max-width: 768px) {
+        .process-step {
+            flex-direction: column;
+            text-align: center;
+        }
+        .step-number {
+            margin-right: 0;
+            margin-bottom: 1rem;
+        }
+        .step-arrow {
+            transform: rotate(90deg);
+            margin: 1rem 0;
+        }
+    }
+    
+    /* Portfolio Section */
+    .portfolio-slider {
+        padding: 30px !important;
+        overflow: hidden;
+    }
+    
+    .swiper-wrapper {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+    
+    .swiper-slide {
+        width: 300px !important;
+        margin-right: 30px;
+        flex-shrink: 0;
+    }
+    
+    .portfolio-card {
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    
+    .portfolio-img-container {
+        position: relative;
+        padding-top: 75%; /* 4:3 aspect ratio */
+    }
+    
+    .portfolio-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .portfolio-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        display: flex;
+        align-items: flex-end;
+    }
+    
+    .portfolio-card:hover .portfolio-overlay {
+        opacity: 1;
+    }
+    
+    .overlay-content {
+        padding: 2rem;
+        color: white;
+        width: 100%;
+    }
+    
+    .swiper-slide {
+        height: auto;
+    }
+    
+    /* Service Card Styles */
+    .service-img {
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.3s ease;
+    }
+
+    .service-card:hover .service-img {
+      transform: scale(1.05);
+    }
+
+    .service-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    
+
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Modern Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h1 class="display-3 fw-bold mb-4">Capture Your <span class="text-primary">Timeless</span> Moments</h1>
+                <p class="lead mb-4">Professional photography that tells your unique story through artistry and emotion.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="why-choose-us py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Why Choose Timeless Moments</h2>
+            <p class="section-subtitle">Capturing your memories with artistry and care</p>
+        </div>
+        
+        <div class="row g-4">
+            <!-- Feature 1 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="ri-camera-lens-line"></i>
+                    </div>
+                    <h3 class="h5">Professional Equipment</h3>
+                    <p class="mb-0">State-of-the-art cameras and lenses for stunning image quality</p>
+                </div>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="ri-award-line"></i>
+                    </div>
+                    <h3 class="h5">Award-Winning</h3>
+                    <p class="mb-0">Recognized excellence in portrait and event photography</p>
+                </div>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="ri-heart-line"></i>
+                    </div>
+                    <h3 class="h5">Personalized Service</h3>
+                    <p class="mb-0">Tailored sessions to capture your unique story</p>
+                </div>
+            </div>
+            
+            <!-- Feature 4 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="ri-album-line"></i>
+                    </div>
+                    <h3 class="h5">Beautiful Albums</h3>
+                    <p class="mb-0">Premium quality prints and albums to cherish forever</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Services Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Our Services</h2>
+            <p class="lead text-muted">Professional photography services tailored to your needs</p>
+            <a href="/services/" class="btn btn-outline-primary mt-3">View All Services</a>
+        </div>
+        
+        <div class="row g-4">
+            {% for service in services %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card service-card h-100 border-0 shadow-sm">
+                    {% if service.image %}
+                    <div class="card-img-top service-img" style="background-image: url('{{ service.image.url }}');"></div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 class="h5">{{ service.name }}</h3>
+                        <p class="text-muted">{{ service.short_description|default:"Professional photography service" }}</p>
+                        <a href="{% url 'studio_services:service_detail' service.slug %}" class="btn btn-primary btn-sm stretched-link">
+                            Learn More <i class="ri-arrow-right-line ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No services available at the moment</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Portfolio Section -->
+<section class="py-5 bg-light" id="portfolio">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Our Portfolio</h2>
+            <p class="lead text-muted">Explore our latest creative work</p>
+            <a href="{% url 'studio_portfolio:view_all' %}" class="btn btn-primary">View All Portfolios</a>
+        </div>
+        
+        <div class="portfolio-slider swiper-container">
+            <div class="swiper-wrapper">
+                {% for portfolio in portfolios %}
+                <div class="swiper-slide" style="width: 300px;">
+                    <div class="portfolio-card">
+                        <a href="{% url 'studio_portfolio:portfolio_detail' portfolio.slug %}">
+                            <div class="portfolio-img-container">
+                                {% if portfolio.cover_image %}
+                                <img src="{{ portfolio.cover_image.url }}" alt="{{ portfolio.title }}" class="portfolio-img">
+                                {% endif %}
+                                <div class="portfolio-overlay">
+                                    <div class="overlay-content">
+                                        <h3>{{ portfolio.title }}</h3>
+                                        <span>{{ portfolio.event_date|date:"F Y" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Testimonials Section -->
+{% load testimonial_tags %}
+{% testimonial_slider limit=6 show_title=True show_view_all=True %}
+
+<!-- Process Section -->
+<section class="process-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Your journey to perfect photographs</p>
+        </div>
+        
+        <div class="row g-4 text-center">
+            <!-- Step 1 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="p-3">
+                    <div class="step-number mx-auto mb-3">1</div>
+                    <h3 class="h5">Book Session</h3>
+                    <p class="small">Select package and schedule date</p>
+                </div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="p-3">
+                    <div class="step-number mx-auto mb-3">2</div>
+                    <h3 class="h5">Consultation</h3>
+                    <p class="small">Discuss vision and styling</p>
+                </div>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="p-3">
+                    <div class="step-number mx-auto mb-3">3</div>
+                    <h3 class="h5">Photo Session</h3>
+                    <p class="small">Enjoy your photography experience</p>
+                </div>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="p-3">
+                    <div class="step-number mx-auto mb-3">4</div>
+                    <h3 class="h5">Gallery Delivery</h3>
+                    <p class="small">Receive edited images</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+<script>
+    // Lightbox configuration
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true,
+        'alwaysShowNavOnTouchDevices': true
+    });
+</script>
+<script>
+    // Simple counter animation
+    const counters = document.querySelectorAll('.counter');
+    counters.forEach(counter => {
+        const target = counter.innerText;
+        const increment = parseInt(target) / 40;
+        let current = 0;
+        
+        const updateCounter = () => {
+            if (current < parseInt(target)) {
+                current += increment;
+                counter.innerText = Math.ceil(current) + '+';
+                setTimeout(updateCounter, 50);
+            } else {
+                counter.innerText = target;
+            }
+        };
+        
+        updateCounter();
+    });
+</script>
+<script>
+    // 3D Tilt Effect
+    document.querySelectorAll('.feature-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            card.style.transform = `perspective(1000px) rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateY(0) rotateX(0)';
+        });
+    });
+    
+    // Scroll Reveal Animation
+    ScrollReveal().reveal('.feature-card, .gallery-item', {
+        delay: 200,
+        distance: '20px',
+        origin: 'bottom',
+        interval: 100
+    });
+</script>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        new Swiper('.portfolio-slider', {
+            slidesPerView: 'auto',
+            spaceBetween: 30,
+            freeMode: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            mousewheel: true,
+        });
+    });
+</script>
+{% endblock %}

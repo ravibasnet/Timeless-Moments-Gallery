@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold mb-2">{{ category.name }}</h1>
+            <p class="lead text-muted">{{ photos.count }} photos in this collection</p>
+        </div>
+        
+        <div class="row g-4" data-masonry='{"percentPosition": true}'>
+            {% for photo in photos %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#photoModal{{ photo.id }}">
+                        <img src="{{ photo.image.url }}" 
+                             class="card-img-top img-fluid hover-zoom" 
+                             alt="{{ photo.title }}"
+                             style="height: 300px; object-fit: cover;">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ photo.title }}</h5>
+                        <p class="card-text text-muted">{{ photo.description|truncatechars:100 }}</p>
+                        <small class="text-muted">{{ photo.upload_date|date:"F j, Y" }}</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="photoModal{{ photo.id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content border-0">
+                        <div class="modal-body p-0">
+                            <img src="{{ photo.image.url }}" class="img-fluid w-100" alt="{{ photo.title }}">
+                        </div>
+                        <div class="modal-footer">
+                            <h5 class="modal-title">{{ photo.title }}</h5>
+                            <p class="mb-0 text-muted">{{ photo.description }}</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // No script needed for this modernized version
+});
+</script>
+{% endblock %}

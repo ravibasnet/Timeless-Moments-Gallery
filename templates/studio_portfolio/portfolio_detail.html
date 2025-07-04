@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-light: #3b82f6;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --gray: #94a3b8;
+    }
+    
+    body {
+        background: var(--light);
+        color: var(--dark);
+        font-family: 'Inter', -apple-system, sans-serif;
+    }
+    
+    .portfolio-hero {
+        height: 70vh;
+        min-height: 500px;
+        background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                    url('{{ portfolio.cover_image.url }}');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 4rem;
+        color: white;
+        position: relative;
+    }
+    
+    .portfolio-title {
+        font-size: clamp(2rem, 5vw, 4rem);
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+    }
+    
+    .portfolio-meta {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .portfolio-content {
+        max-width: 1200px;
+        margin: -100px auto 0;
+        padding: 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 10;
+    }
+    
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin: 3rem 0;
+    }
+    
+    .gallery-item {
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .gallery-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+    }
+    
+    .gallery-image {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    
+    .gallery-item:hover .gallery-image {
+        transform: scale(1.05);
+    }
+    
+    .portfolio-nav {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    .nav-btn {
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-btn:hover {
+        background: var(--primary-light);
+        color: white;
+    }
+    
+    /* Custom Lightbox */
+    .lightbox-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.9);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .lightbox-content {
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+    }
+    
+    .lightbox-image {
+        max-width: 100%;
+        max-height: 90vh;
+        display: block;
+        margin: 0 auto;
+    }
+    
+    .lightbox-caption {
+        color: white;
+        text-align: center;
+        padding: 1rem;
+    }
+    
+    .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+        z-index: 10;
+    }
+    
+    .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        transform: translateY(-50%);
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+    
+    .lightbox-nav button {
+        background: rgba(0,0,0,0.5);
+        color: white;
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="portfolio-hero">
+    <h1 class="portfolio-title">{{ portfolio.title }}</h1>
+    <div class="portfolio-meta">
+        <div class="meta-item">
+            <i class="bi bi-calendar-event"></i>
+            <span>{{ portfolio.event_date|date:"F j, Y" }}</span>
+        </div>
+        <div class="meta-item">
+            <i class="bi bi-geo-alt"></i>
+            <span>{{ portfolio.location }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="portfolio-content">
+    <div class="d-flex gap-3 mb-4">
+        <span class="badge bg-primary px-3 py-2">{{ portfolio.category }}</span>
+        <span class="badge bg-secondary px-3 py-2">{{ portfolio.client }}</span>
+    </div>
+    
+    <article class="portfolio-description mb-5">
+        <h2 class="h3 mb-4">About This Event</h2>
+        {{ portfolio.description|safe }}
+    </article>
+    
+    <section class="gallery-section">
+        <h2 class="h3 mb-4">Gallery</h2>
+        <div class="gallery-grid">
+            {% for image in portfolio.images.all %}
+            <div class="gallery-item">
+                <a href="{{ image.image.url }}" data-caption="{{ image.caption }}">
+                    <img src="{{ image.image.url }}" 
+                         alt="{{ image.caption }}" 
+                         class="gallery-image">
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    
+    <div class="portfolio-nav">
+        {% if previous_portfolio %}
+        <a href="{% url 'studio_portfolio:portfolio_detail' previous_portfolio.slug %}" class="nav-btn">
+            ← Previous Project
+        </a>
+        {% endif %}
+        
+        {% if next_portfolio %}
+        <a href="{% url 'studio_portfolio:portfolio_detail' next_portfolio.slug %}" class="nav-btn ms-auto">
+            Next Project →
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="lightbox-overlay" id="lightbox">
+    <span class="lightbox-close">&times;</span>
+    <div class="lightbox-content">
+        <img class="lightbox-image" id="lightbox-img" src="" alt="">
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+    <div class="lightbox-nav">
+        <button id="lightbox-prev">❮</button>
+        <button id="lightbox-next">❯</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lightbox functionality
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        const closeBtn = document.querySelector('.lightbox-close');
+        const prevBtn = document.getElementById('lightbox-prev');
+        const nextBtn = document.getElementById('lightbox-next');
+        
+        // Get all gallery images
+        const galleryImages = document.querySelectorAll('.gallery-item a');
+        let currentIndex = 0;
+        
+        // Open lightbox
+        galleryImages.forEach((img, index) => {
+            img.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentIndex = index;
+                lightboxImg.src = this.href;
+                lightboxCaption.textContent = this.dataset.caption || '';
+                lightbox.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        // Close lightbox
+        closeBtn.addEventListener('click', function() {
+            lightbox.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Navigation
+        prevBtn.addEventListener('click', function() {
+            currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+            updateLightbox();
+        });
+        
+        nextBtn.addEventListener('click', function() {
+            currentIndex = (currentIndex + 1) % galleryImages.length;
+            updateLightbox();
+        });
+        
+        function updateLightbox() {
+            const currentImg = galleryImages[currentIndex];
+            lightboxImg.src = currentImg.href;
+            lightboxCaption.textContent = currentImg.dataset.caption || '';
+        }
+        
+        // Close on ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                lightbox.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            if (e.key === 'ArrowLeft') {
+                currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+                updateLightbox();
+            }
+            if (e.key === 'ArrowRight') {
+                currentIndex = (currentIndex + 1) % galleryImages.length;
+                updateLightbox();
+            }
+        });
+    });
+</script>
+{% endblock %}

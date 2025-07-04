@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4">Our Portfolio</h1>
+        <p class="lead">Explore our collection of work</p>
+    </div>
+    
+    <div class="row g-4">
+        {% for portfolio in portfolios %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <img src="{{ portfolio.cover_image.url }}" class="card-img-top" alt="{{ portfolio.title }}">
+                <div class="card-body">
+                    <h2 class="h5 card-title">{{ portfolio.title }}</h2>
+                    <p class="card-text">{{ portfolio.event_date|date:"F Y" }}</p>
+                    <a href="{% url 'studio_portfolio:portfolio_detail' portfolio.slug %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

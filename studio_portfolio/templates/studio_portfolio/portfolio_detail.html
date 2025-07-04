@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4">{{ portfolio.title }}</h1>
+        <p class="lead">{{ portfolio.event_date|date:"F j, Y" }}</p>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <img src="{{ portfolio.cover_image.url }}" alt="{{ portfolio.title }}" class="img-fluid rounded shadow">
+        </div>
+    </div>
+    
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <p>{{ portfolio.description|linebreaks }}</p>
+        </div>
+    </div>
+    
+    <div class="row g-3" id="portfolio-gallery">
+        {% for image in portfolio.images.all %}
+        <div class="col-md-4 col-lg-3">
+            <a href="{{ image.image.url }}" data-lightbox="portfolio-{{ portfolio.id }}" data-title="{{ image.caption }}">
+                <img src="{{ image.image.url }}" alt="{{ image.caption }}" class="img-fluid rounded">
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

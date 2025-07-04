@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ service_name }} Testimonials | {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <span class="text-primary-600 font-semibold text-sm uppercase tracking-wider">Testimonials</span>
+            <h2 class="text-4xl font-bold text-gray-900 mt-2 mb-4">
+                <i class="{{ service_icon }}"></i> {{ service_name }} Testimonials
+            </h2>
+            <div class="w-20 h-1 bg-primary-500 mx-auto"></div>
+            
+            <div class="mt-6">
+                <a href="{% url 'testimonials:testimonial_list' %}" 
+                   class="inline-flex items-center text-primary-600 hover:text-primary-800 text-sm font-medium">
+                    <i class="ri-arrow-left-line mr-1"></i> Back to All Testimonials
+                </a>
+            </div>
+        </div>
+        
+        <!-- Testimonials Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {% for testimonial in testimonials %}
+                {% include 'testimonials/includes/testimonial_card.html' %}
+            {% empty %}
+                <div class="col-span-3 text-center py-10">
+                    <i class="ri-emotion-sad-line text-5xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-600">No testimonials found for {{ service_name }}. Check back later!</p>
+                    <a href="{% url 'testimonials:testimonial_list' %}" 
+                       class="mt-4 inline-block px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors">
+                        View All Testimonials
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
