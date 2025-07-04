@@ -18,7 +18,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 # For production security, only allow your Render domain
-ALLOWED_HOSTS = ['timeless-moment-gallery-lose.onrender.com']
+ALLOWED_HOSTS = ['*']
 # IMPORTANT: Remove any ALLOWED_HOSTS environment variable in Render dashboard to avoid override.
 
 # Application definition
